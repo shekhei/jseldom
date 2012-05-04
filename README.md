@@ -3,7 +3,7 @@ jSelDom
 
 What is this?
 -------------
-Very often than not, in a rich interface site, there's a lot of dom creation required, and it hasn't been that simple, they require quite a bit of typing, although many libraries made it easier, it was still a little painful, so I came up with this
+More often than not, in a rich interface site, there's a lot of dom creation required, and it hasn't been that simple, they require quite a bit of typing, although many libraries made it easier, it was still a little painful, so I came up with this
 
 Inspiration
 -----------
