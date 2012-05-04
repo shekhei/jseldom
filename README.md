@@ -18,18 +18,24 @@ Examples(jquery example might not be the most optimised)
 
 ### Simple dom creation(making a div with class foo)
 
+#### Using jQuery
 ```js
 //using jquery
 $('<div>').addClass('foo').appendTo('#result');
+```
+```js
 //or
 $('<div class="foo">').appendTo('#result');
-//using jSelDom
+```
+#### Using jSelDom w/ jSelDom
+```js
 $('#result').jseldom('div.foo');
 ```
 
 ### dom creation with an object to inject with
-#### you can see it on http://jseldom.shekhei.com
+You can see it on http://jseldom.shekhei.com
 
+#### Object with data
 ```js
 // imagine if this links is returned from an ajax call? :)
 var links = [
@@ -37,11 +43,17 @@ var links = [
               {text:"Demo!", child:"See them in action!", href:"demo.html"}, 
               {text:"Documentations...", child:"Read them...", href:"documentations.html"}
             ];
+```
+#### Using jQuery
+```js
 // using jquery
 for ( var i = 0; i < links.length; i++ ) {
   // if you set them one by one on your own using prop is probably worse...
   $('<a href='+links[i].href+' class="orangelink">'+links[i].text+'<span class="child">'+links.child+'</span></a>').appendTo('#result');
 }
+```
+#### Using jSelDom w/ jQuery
+```js
 // jseldom, using the special attribute called 'text'
 $('#result').jseldom('a.orangelink[href="%href%",text="%text%"] span.child[text="%child%"]', links);
 ```
