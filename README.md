@@ -29,7 +29,7 @@ $('<div class="foo">').appendTo('#result');
 ```
 #### Using jSelDom w/ jSelDom
 ```js
-$('#result').jseldom('div.foo');
+$.jseldom('div.foo').appendTo('#result);
 ```
 
 ### dom creation with an object to inject with
@@ -55,7 +55,7 @@ for ( var i = 0; i < links.length; i++ ) {
 #### Using jSelDom w/ jQuery
 ```js
 // jseldom, using the special attribute called 'text'
-$('#result').jseldom('a.orangelink[href="%href%",text="%text%"] span.child[text="%child%"]', links);
+$.jseldom('a.orangelink[href="%href%",text="%text%"] span.child[text="%child%"]', links).appendto('#result');
 ```
 
 Please feel free to post any issue or feature request :) And please fork it all you want!
