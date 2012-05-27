@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+	<head>
+	</head>
+	<body>
+        <script src="jquery/jquery-1.7.2.js"></script>
+        <script src="src/jseldom-jquery.js"></script>
+        <script>
+        	(function($){
+        		$.jseldom(".first + .sibling .child").appendTo(document.body);
+        		console.log($(".first").length);
+        		console.log($('.sibling').length);
+        	})(jQuery);
+        </script>
+	</body>
+</html>
