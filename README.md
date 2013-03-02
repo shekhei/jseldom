@@ -1,6 +1,10 @@
 jSelDom
 =======
 
+Changes version 0.0.2
+---------------------
+Not using % for variables, now using {}, so for example, instead of "div[data-var=%variable%]" now it would be "div[data-var={variable}]"
+
 What is this?
 -------------
 More often than not, in a rich interface site, there's a lot of dom creation required, and it hasn't been that simple, they require quite a bit of typing, although many libraries made it easier, it was still a little painful, so I came up with this
@@ -55,7 +59,13 @@ for ( var i = 0; i < links.length; i++ ) {
 #### Using jSelDom w/ jQuery
 ```js
 // jseldom, using the special attribute called 'text'
-$.jseldom('a.orangelink[href="%href%",text="%text%"] span.child[text="%child%"]', links).appendto('#result');
+$.jseldom('a.orangelink[href="{href}",text="{text}"] span.child[text="{child}"]', links).appendto('#result');
+```
+
+### Using a printf like version
+```js
+$.jseldomf('div[data-var1="{0}"] .second[class="{1}"]', "name", "another"');
+// this will result in <div data-var1="name"><div class="second another"></div></div>
 ```
 
 Please feel free to post any issue or feature request :) And please fork it all you want!
