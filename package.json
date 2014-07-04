@@ -1,6 +1,6 @@
 {
   "name": "jseldom",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Creating dom with selectors",
   "main": "index.js",
   "directories": {
