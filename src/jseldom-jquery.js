@@ -64,11 +64,25 @@ License: GNU Lesser General Public License (http://www.gnu.org/licenses/lgpl.htm
                 isVar = true;
             }
             else if ( c === ' ' || c === '+' || c === "<" ) {   // end of a tag, or as a sibling element
+                // now lets peek forward
+                if ( c === " " ) {
+                  for ( ; c === " " && i < selLen; i++ ) {
+                    c = selector.charAt(i);
+                  }
+                  if ( i < selLen ) {
+                    --i;
+                    c = selector.charAt(i);
+                  }
+                }
                 arr.push(buffer);
                 if ( c === '+' || c === '<') {
                     arr.push({sel:c, val:''});
+                    while ( i < selLen && ( c = selector.charAt(++i) ) === " " ) {}
+                    if ( i < selLen ) {
+                      c = selector.charAt(--i);
+                    }
                 }
-                buffer = {sel:[],val:[]};
+                buffer = {sel:"",val:[]};
             }
             else if ( c !== ' ' && c !== ']' ) {
                 buffer.sel+= c;

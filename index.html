@@ -2,14 +2,18 @@
 <html>
 	<head>
 	</head>
-	<body>
+  <body>
+    <div id="container"></div>
         <script src="jquery/jquery-1.7.2.js"></script>
         <script src="src/jseldom-jquery.js"></script>
         <script>
-        	(function($){
-        		$.jseldom(".first + .sibling .child").appendTo(document.body);
-        		console.log($(".first").length);
-        		console.log($('.sibling').length);
+          (function($){
+            var t = $('#container');
+            //$.jseldom(".first + .sibling .child").appendTo(t);
+            //$.jseldom('div+div').appendTo(t);
+            //$.jseldom('div +div').appendTo(t);
+            //$.jseldom('div+ div').appendTo(t);
+            $.jseldom('div< div').appendTo(t);
         	})(jQuery);
         </script>
 	</body>
