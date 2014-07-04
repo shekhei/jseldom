@@ -1,0 +1,24 @@
+{
+  "name": "jseldom",
+  "version": "0.0.1",
+  "description": "Creating dom with selectors",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shekhei/jseldom.git"
+  },
+  "keywords": [
+    "dom",
+    "selector",
+    "create"
+  ],
+  "author": "Wong Shek Hei",
+  "license": "BSD",
+  "readmeFilename": "README.md"
+}

@@ -1,0 +1,18 @@
+<!doctype>
+<html>
+<head>
+</head>
+<body>
+	<div id="test_ground"></div>
+	<script src="../jquery/jquery-1.7.2.js"></script>
+	<script src="../src/jseldom-jquery.js"></script>
+	<script>
+		console.profile();
+		for ( var i = 0; i < 10000; ++i ) {
+			$.jseldom('div.some.really.complex[and="ridiculous"] #so.that.i+#can.test+#if.it.is #because.of.this[with="some"][really="long"][list="of"][attributes="damn"]');
+		}
+		console.profileEnd();
+		console.log($.jseldom('div.some.really.complex[and="ridiculous"] #so.that.i+#can.test+#if.it.is #because.of.this[with="some"][really="long"][list="of"][attributes="damn"]'));
+	</script>
+</body>
+</html>
