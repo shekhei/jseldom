@@ -6,9 +6,11 @@
   <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
 </head>
 <body>
-<div id="container"></div>
+<div id="mocha"></div>
+<div id="workarea"></div>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="http://requirejs.org/docs/release/2.1.15/minified/require.js"></script>
+<script src="../node_modules/mocha/mocha.js"></script>
 <script>
   require.config({
     nodeIdCompat: false,
@@ -21,8 +23,11 @@
     waitSeconds: 15
   });
 require(['chai', '../../build/jseldom'], function(){
-  	mocha.setup('bdd');
-    $.jseldom('div< div').appendTo('container');
+  mocha.setup('bdd');
+  require(['./tests/simple_selectors.js'], function(){
+    mocha.checkLeaks();
+    mocha.run();
+  });
 })
 </script>
 
