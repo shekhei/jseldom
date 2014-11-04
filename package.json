@@ -4,12 +4,9 @@
   "description": "Creating dom with selectors",
   "main": "build/jseldom.js",
   "scripts": {
-    "test": "mocha"
-  },
-  "directories": {
     "test": "test"
   },
-  "scripts": {
+  "directories": {
     "test": "test"
   },
   "repository": {
@@ -35,7 +32,8 @@
     "gulp-watch": "^1.1.0",
     "http-server": "^0.7.2",
     "merge-stream": "^0.1.6",
-    "mocha": "^1.21.5"
+    "mocha": "^1.21.5",
+    "requirejs": "^2.1.15"
   },
   "author": "Wong Shek Hei",
   "license": "MIT",

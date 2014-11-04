@@ -278,4 +278,205 @@ $.jseldomf = function(selector) {
     return arrVer.apply(this, args);
 }
 
+function SSYM(val){
+    SSYM.symbols = SSYM.symbols || {};
+    SSYM.symbol_keys = SSYM.symbol_keys || [];
+    var i;
+    if ((i = SSYM.symbols[val]) !== undefined ){ return i;}
+    var i = SSYM.symbol_keys.length;
+    SSYM.symbols[val] = i;
+    SSYM.symbol_keys[i] = val;
+    return i;
+}
+function SSYM_KEY(symbol) {
+    return SSYM.symbol_keys[symbol];
+}
+function Node(n) {
+    this.n = n;
+    this.children = [];
+}
+Node.prototype.addChild = function(node){
+    this.children = this.children || [];
+    this.children.push(node);
+    node.parent = this;
+}
+Node.prototype.addSibling = function(node){
+    if (this.parent) {this.parent.addChild(node)};
+}
+Node.prototype.print = function(output, settings, depth){
+    if (this.n) {
+        output.push("<");
+        output.push((this.n.tagName || "div"));
+        if (this.n.id) {
+            output.push(" id='"+this.n.id+"'");
+        }
+        if (this.n.classname){
+            output.push(" class='"+this.n.classname.join(" ")+"'")
+        }
+        output.push(">");
+    }
+    for (var i = 0; i <this.children.length; i++){
+        this.children[i].print(output);
+    }
+    if (this.n) { output.push("</"+(this.n.tagName || "div")+">");}
+}
+var opsMap = {
+    "+": "addSibling",
+    ">": "addChild"
+}
+function Tree(selector) {
+    var result = infixToTree(selector), ops=result.ops, node=result.out, t, n, op;
+    this.tree = new Node();
+    var opsStack = [], nodeStack=[this.tree], i = 0, j = 1;
+    var firstNode = new Node(node[0]);
+    this.tree.addChild(firstNode)
+    nodeStack.push(firstNode);
+    while ((n = node[j]) && (op = ops[i++])){
+        if ( ")" === op ){
+            while (opsStack[opsStack.length-1] !== "(" && opsStack.length > 0) {
+                opsStack.pop();
+                nodeStack.pop();
+            }
+            opsStack.pop();
+        } else {
+            opsStack.push(op);
+            if ( "(" !== op ){
+                var newNode = new Node(n);
+                nodeStack[nodeStack.length-1][opsMap[op]](newNode);
+                nodeStack.push(newNode);
+                j++;
+            }
+        }
+    }
+
+}
+Tree.prototype.print = function(){
+    var buffer = [];
+    this.tree.print(buffer);
+    return buffer.join("");
+}
+// function Node(){
+// }
+// Node.prototype.left(node){
+//     node.parent = this;
+//     this.left = node;
+// }
+// Node.prototype.right(node) {
+//     node.parent = this;
+//     this.right = node;
+// }
+// function createElNode() {
+//     return new Node();
+// }
+var rOnlyOneAttr=/id|tagName/;
+function infixToTree( selector ) {
+    var l = selector.length,
+        i = 0,
+        c,
+        p,
+        n,
+        states = [SSYM("NONE")],
+        state,
+        opStack = [],
+        outStack = [],
+        buffer = [],
+        node = {},
+        elStates = [SSYM("tagName")],
+        elState,
+        space = false;
+    while (selector[i] === " " && i < l) { i++; }
+    for (; i <= l; i++){
+        c = selector[i];
+        n = selector[i+1];
+        elState = elStates[elStates.length-1];
+        state = states[states.length-1];
+        if (" " === c ) {
+            space = true;
+            if (buffer.length) {
+                if ( rOnlyOneAttr.test(SSYM_KEY(elState))) {
+                    node[SSYM_KEY(elState)] = buffer.join("");
+                } else {
+                    node[SSYM_KEY(elState)] = node[SSYM_KEY(elState)] || [];
+                    node[SSYM_KEY(elState)].push(buffer.join(""));
+                }
+                outStack.push(node);
+            }
+            node = {};
+            elStates.push(SSYM('tagName'));
+            buffer.length = 0;
+            continue;
+        } else if (/[()+>]/.test(c) && SSYM("PROC") !== elState && SSYM("ATTR") !== elState ) {
+            if ( SSYM("EL") === state ) {
+                if ( buffer.length ) {
+                    if ( rOnlyOneAttr.test(SSYM_KEY(elState))) {
+                        node[SSYM_KEY(elState)] = buffer.join("");
+                    } else {
+                        node[SSYM_KEY(elState)] = node[SSYM_KEY(elState)] || [];
+                        node[SSYM_KEY(elState)].push(buffer.join(""));
+                    }
+                    outStack.push(node);
+                    node = {};
+                    elStates.push(SSYM('tagName'));
+                    elStates.pop();
+                    buffer.length = 0;
+                }
+            }
+            if ( c === "(" && ( p === ")" || SSYM("EL") === state)) {
+                opStack.push(">");
+            } else if (state === SSYM("OP") && c !== ")") {
+                // this probably means no element was provided, defaults to div
+                outStack.concat(node);
+                node = {};
+                buffer.length =0;
+                elStates.push(SSYM('tagName'));
+            }
+            states.pop();
+            states.push(SSYM("OP"));
+            opStack.push(c);
+        } else {
+            if (space|| SSYM("EL") !== state) {
+                states.pop();
+                states.push(SSYM("EL"));
+            }
+            if ( state === SSYM("EL") && space ) {
+                opStack.push(">");
+            }
+            var changedState = false;
+            if ( /[.#:[]/.test(c)) {
+                changedState = true;
+                if ( c === "." ) { elStates.pop(); elStates.push(SSYM("classname")); }
+                else if ( c === "#" ) { elStates.pop(); elStates.push(SSYM("id")); }
+                else if ( c === ":" ) { elStates.pop(); elStates.push(SSYM("proc")); }
+                else if ( c === "[" ) { elStates.pop(); elStates.push(SSYM("attr")); }
+            }
+            if ( changedState ) {
+                // change in state
+                if (buffer.length) {
+                    if ( rOnlyOneAttr.test(SSYM_KEY(elState))) {
+                        node[SSYM_KEY(elState)] = buffer.join("");
+                    } else {
+                        node[SSYM_KEY(elState)] = node[SSYM_KEY(elState)] || [];
+                        node[SSYM_KEY(elState)].push(buffer.join(""));
+                    }
+                }
+                buffer.length = 0;
+            } else {
+                buffer.push(c);
+            }
+        }
+        space = false;
+        p = c;
+    }
+    return {
+        ops: opStack,
+        out: outStack
+    }
+};
+
+var jSelDom = {
+    jseldom: jseldom,
+    infixToTree: infixToTree,
+    Tree: Tree
+}
+
 $.jseldom = jseldom;

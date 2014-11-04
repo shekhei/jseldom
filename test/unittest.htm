@@ -24,7 +24,7 @@
   });
 require(['chai', '../../build/jseldom'], function(){
   mocha.setup('bdd');
-  require(['./tests/simple_selectors.js', './tests/infix_convert.js'], function(){
+  require(['./tests/simple_selectors.js', './tests/infix_convert.js', './tests/tree.js'], function(){
     mocha.checkLeaks();
     mocha.run();
   });

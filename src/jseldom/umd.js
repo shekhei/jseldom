@@ -1,8 +1,11 @@
 module.exports = exports = {
 	exports:function(){
-		return "jseldom";
+		return "jSelDom";
 	},
 	namespace:function(){
-		return "jseldom";
+		return "jSelDom";
+	},
+	dependencies: function(){
+		return ["jQuery"];
 	}
 }
