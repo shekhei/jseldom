@@ -9,4 +9,22 @@ describe("selector to output", function(){
 		console.log(tree);
 		console.log(tree.print());
 	});
+	it("selector to output: should return correct tree('.one (.two ( .three + .four ) + (.five #six) .seven) > #eight')", function(){
+		var tree = new jseldom.Tree('.one (.two ( .three + .four ) + (.five #six) .seven) > #eight');
+		console.log(tree);
+		console.log(tree.print());
+		expect(tree.print()).to.eql(
+["<div class='one'>"
+," <div class='two'>"
+,"  <div class='three'></div>"
+,"  <div class='five'>"
+,"   <div id='six'></div>"
+,"   <div class='seven'></div>"
+,"  </div>"
+,"  <div class='four'></div>"
+," <div id='eight'></div>"
+,"</div>"].join("")
+)
+	});
+
 });

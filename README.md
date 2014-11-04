@@ -1,8 +1,29 @@
 jSelDom
 =======
 
-Changes version 0.0.2
+Changes version 0.0.3-edge
 ---------------------
+Added parenthesis support, for example
+
+```
+.one (.two ( .three + .four ) + (.five #six) .seven) > #eight
+```
+
+will generate
+
+```html
+<div class="one">
+	<div class="two">
+		<div class="three"></div>
+		<div class="five">
+			<div id="six"></div>
+			<div class="seven"></div>
+		</div>
+		<div class="four"></div>
+	<div id="eight"></div>
+</div>
+```
+
 Not using % for variables, now using {}, so for example, instead of "div[data-var=%variable%]" now it would be "div[data-var={variable}]"
 
 What is this?

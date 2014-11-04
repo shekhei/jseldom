@@ -304,7 +304,11 @@ Node.prototype.addSibling = function(node){
     if (this.parent) {this.parent.addChild(node)};
 }
 Node.prototype.print = function(output, settings, depth){
+    depth = depth || 0;
     if (this.n) {
+        for (var i = 0; i <depth; i++){
+            output.push(" ");
+        }
         output.push("<");
         output.push((this.n.tagName || "div"));
         if (this.n.id) {
@@ -316,16 +320,23 @@ Node.prototype.print = function(output, settings, depth){
         output.push(">");
     }
     for (var i = 0; i <this.children.length; i++){
-        this.children[i].print(output);
+        this.children[i].print(output, settings, depth+1);
     }
-    if (this.n) { output.push("</"+(this.n.tagName || "div")+">");}
+    if (this.n) { 
+        for (var i = 0; i <depth; i++){
+            output.push(" ");
+        }
+        output.push("</"+(this.n.tagName || "div")+">");
+    }
 }
 var opsMap = {
     "+": "addSibling",
     ">": "addChild"
 }
 function Tree(selector) {
+    console.log(selector);
     var result = infixToTree(selector), ops=result.ops, node=result.out, t, n, op;
+    console.log(ops, node);
     this.tree = new Node();
     var opsStack = [], nodeStack=[this.tree], i = 0, j = 1;
     var firstNode = new Node(node[0]);
@@ -347,12 +358,13 @@ function Tree(selector) {
                 j++;
             }
         }
+        console.log(opsStack);
     }
 
 }
 Tree.prototype.print = function(){
     var buffer = [];
-    this.tree.print(buffer);
+    this.tree.print(buffer, undefined, -1);
     return buffer.join("");
 }
 // function Node(){
@@ -385,7 +397,7 @@ function infixToTree( selector ) {
         elState,
         space = false;
     while (selector[i] === " " && i < l) { i++; }
-    for (; i <= l; i++){
+    for (; i < l; i++){
         c = selector[i];
         n = selector[i+1];
         elState = elStates[elStates.length-1];
@@ -437,6 +449,9 @@ function infixToTree( selector ) {
             if (space|| SSYM("EL") !== state) {
                 states.pop();
                 states.push(SSYM("EL"));
+                if ( ")" === p && c ) {
+                    opStack.push(">");
+                }
             }
             if ( state === SSYM("EL") && space ) {
                 opStack.push(">");
@@ -466,6 +481,15 @@ function infixToTree( selector ) {
         }
         space = false;
         p = c;
+    }
+    if (buffer.length) {
+        if ( rOnlyOneAttr.test(SSYM_KEY(elState))) {
+            node[SSYM_KEY(elState)] = buffer.join("");
+        } else {
+            node[SSYM_KEY(elState)] = node[SSYM_KEY(elState)] || [];
+            node[SSYM_KEY(elState)].push(buffer.join(""));
+        }
+        outStack.push(node);
     }
     return {
         ops: opStack,

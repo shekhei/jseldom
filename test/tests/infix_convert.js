@@ -84,4 +84,27 @@ describe("complex infix convert", function(){
 		expect(postfix.out[0].tagName).to.eql(undefined);
 		
 	});
+	it("infix convert: should return correct tree('.one (.two ( .three + .four ) + (.five #six) .seven) > #eight ')", function(){
+		// var postfix = jseldom.infixPostfix('div > div ((span span > div) div)>div');
+		var postfix = jseldom.infixToTree('.one (.two ( .three + .four ) + (.five #six) .seven) > #eight');
+		expect(postfix.ops).to.eql("> ( > ( + ) + ( > ) > ) >".split(" "));
+		expect(postfix.out.length).eql(8);
+		expect(postfix.out[0].classname).to.eql(["one"]);
+		expect(postfix.out[0].tagName).to.eql(undefined);
+		expect(postfix.out[1].tagName).to.eql(undefined);
+		expect(postfix.out[1].classname).to.eql(["two"]);
+		expect(postfix.out[2].tagName).to.eql(undefined);
+		expect(postfix.out[2].classname).to.eql(["three"]);
+		expect(postfix.out[3].tagName).to.eql(undefined);
+		expect(postfix.out[3].classname).to.eql(["four"]);
+		expect(postfix.out[4].tagName).to.eql(undefined);
+		expect(postfix.out[4].classname).to.eql(["five"]);
+		expect(postfix.out[5].tagName).to.eql(undefined);
+		expect(postfix.out[5].id).to.eql("six");
+		expect(postfix.out[6].tagName).to.eql(undefined);
+		expect(postfix.out[6].classname).to.eql(["seven"]);
+		expect(postfix.out[7].tagName).to.eql(undefined);
+		expect(postfix.out[7].id).to.eql("eight");
+	});
+
 });
