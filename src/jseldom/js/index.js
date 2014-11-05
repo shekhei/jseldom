@@ -334,9 +334,7 @@ var opsMap = {
     ">": "addChild"
 }
 function Tree(selector) {
-    console.log(selector);
     var result = infixToTree(selector), ops=result.ops, node=result.out, t, n, op;
-    console.log(ops, node);
     this.tree = new Node();
     var opsStack = [], nodeStack=[this.tree], i = 0, j = 1;
     var firstNode = new Node(node[0]);
@@ -358,7 +356,6 @@ function Tree(selector) {
                 j++;
             }
         }
-        console.log(opsStack);
     }
 
 }
